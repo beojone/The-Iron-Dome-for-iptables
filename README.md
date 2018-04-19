@@ -26,4 +26,10 @@ Desenvolvido por Duilio Beojone Neto
 \
 \
 \
+Usage: "$0 CountryCode ex: $0 CN BR AU"\
+ex: ./iptablesSETSbyCC.sh CN BR AU\
+\
+\
+\
+\
 "I guess that makes MINIX the most widely used computer operating system in the world, even more than Windows, Linux, or MacOS. And I didn't even know until I read a press report about it." AS Tanenbaum
