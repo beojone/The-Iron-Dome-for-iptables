@@ -22,7 +22,7 @@ Desenvolvido por Duilio Beojone Neto
 \# [OK] Create a function to remove the sets previously created\
 \# - SED on criaset(), aiming networks smaller than 256 hosts\
 \# - IPv6 support\
-\# [OK] Block Tor network exit nodes
+\# [OK] Block Tor network exit nodes\
 \# - check if ripe and afrinic files still corrupted (they were reporting a crazy number of hosts on some networks)					\
 \# - mac support (since I dont have a mac I think this will take some more time to go...)
 \
