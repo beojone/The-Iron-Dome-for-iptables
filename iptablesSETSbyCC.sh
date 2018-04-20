@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
 comeca () {
-	clear
-	echo -e "\n\n\nCriando as regras para bloquear: ${@^^}\n"
-	for i in $@
-	do
+        clear
+        echo -e "\n\n\nCriando as regras para bloquear: ${@^^}\n"
+        for i in $@
+        do
 
-	 echo $i | grep -Ei "gd|py|co|ve|cl|sr|bo|ec|gf|ar|gy|br|pe|uy|fk" > /dev/null 2>&1
+         echo $i | grep -Ei "TOR" > /dev/null 2>&1
+         [ $? -eq 0 ] && torblocker $i && continue
+
+         echo $i | grep -Ei "gd|py|co|ve|cl|sr|bo|ec|gf|ar|gy|br|pe|uy|fk" > /dev/null 2>&1
          [ $? -eq 0 ] && baixaefiltra $i lacnic && continue
 
          echo $i | grep -Ei "SX|BQ|CW|AG|AI|AN|AW|BB|BL|BM|BS|BZ|CA|CR|CU|DM|DO|GD|GL|GP|GT|HN|HT|JM|KN|KY|LC|MF|MQ|MS|MX|NI|PA|PM|PR|SV|TC|TT|US|VC|VG|VI" > /dev/null 2>&1
@@ -24,51 +27,103 @@ comeca () {
          echo $i | grep -Ei "AS|AU|CK|FJ|FM|GU|KI|MH|MP|NC|NF|NR|NU|NZ|PF|PG|PN|PW|SB|TK|TO|TV|UM|VU|WF|WS" > /dev/null 2>&1
          [ $? -eq 0 ] && baixaefiltra $i apnic && continue
 
-	done
+
+
+        done
+}
+
+torblocker() {
+        a=${1^^}
+        echo -e "\nBloqueando $a"
+
+        curl -sSL "https://check.torproject.org/cgi-bin/TorBulkExitList.py?ip=$(curl icanhazip.com)" | sed '/^#/d' > tornets.txt
+
+        ipset create "$a-net" hash:ip 2>/dev/null
+        ipset flush "$a-net"
+
+        while IFS= read -r iptor;
+        do
+        ipset add "$a-net" $iptor
+        done < tornets.txt
+
+        iptables -t filter -I INPUT -m set --match-set "$a-net" src -j DROP
+
+rm tornets.txt 2>/dev/null
 }
 
 baixaefiltra () {
-	a=${1^^}
-	echo -e "\nBloqueando $a"
+        a=${1^^}
+        echo -e "\nBloqueando $a"
 
-	lacnic="http://ftp.lacnic.net/pub/stats/lacnic/delegated-lacnic-extended-latest"
-	arin="https://ftp.arin.net/pub/stats/arin/delegated-arin-extended-latest"
-	apnic="https://ftp.apnic.net/stats/apnic/delegated-apnic-extended-latest"
-	afrinic="ftp://ftp.afrinic.net/pub/stats/afrinic/delegated-afrinic-extended-latest"
-	ripencc="http://ftp.ripe.net/pub/stats/ripencc/delegated-ripencc-extended-latest"
+        lacnic="http://ftp.lacnic.net/pub/stats/lacnic/delegated-lacnic-extended-latest"
+        arin="https://ftp.arin.net/pub/stats/arin/delegated-arin-extended-latest"
+        apnic="https://ftp.apnic.net/stats/apnic/delegated-apnic-extended-latest"
+        afrinic="ftp://ftp.afrinic.net/pub/stats/afrinic/delegated-afrinic-extended-latest"
+        ripencc="http://ftp.ripe.net/pub/stats/ripencc/delegated-ripencc-extended-latest"
 
-	#echo delegated-$2-extended-latest
-	#echo ${!2}
+        #echo delegated-$2-extended-latest
+        #echo ${!2}
 
-	[ -f delegated-$2-extended-latest ] ||  { echo "Obtendo arquivo referencial"; wget --quiet ${!2} ; } || { echo "Não foi possivel obter arquivo referencial"; exit 33; }
+        [ -f delegated-$2-extended-latest ] ||  { echo "Obtendo arquivo referencial"; wget --quiet ${!2} ; } || { echo "Não foi possivel obter arquivo referencial"; exit 33; }
 
-	grep -F $(echo ${a^^}) delegated-$2-extended-latest | grep -Fv -e asn -e ipv6 -e allocated > ipv4$a
+        grep -F $(echo ${a^^}) delegated-$2-extended-latest | grep -Fv -e asn -e ipv6 -e allocated > ipv4$a
 
-	criaset $a
+        criaset $a
 }
 
 criaset () {
-	a=${1^^}
-	echo "Criando set para $a"
+        a=${1^^}
+        echo "Criando set para $a"
 
-	sed 's/|/ /g' ipv4$a | awk '{print $4$5}' | sed -e 's/256/\/24/' -e 's/512/\/23/' -e 's/1024/\/22/' -e 's/2048/\/21/' -e 's/4096/\/20/' -e 's/8192/\/19/' -e 's/16384/\/18/' -e 's/32768/\/17/' -e 's/65536/\/16/' -e 's/131072/\/15/' -e 's/262144/\/14/' -e 's/524288/\/13/' -e 's/1048576/\/12/' -e 's/2097152/\/11/' -e 's/4194304/\/10/' -e 's/8388608/\/9/' -e 's/16777216/\/8/' > Redes$a.txt
+        sed 's/|/ /g' ipv4$a | awk '{print $4$5}' | sed -e 's/256/\/24/' -e 's/512/\/23/' -e 's/1024/\/22/' -e 's/2048/\/21/' -e 's/4096/\/20/' -e 's/8192/\/19/' -e 's/16384/\/18/' -e 's/32768/\/17/' -e 's/65536/\/16/' -e 's/131072/\/15/' -e 's/262144/\/14/' -e 's/524288/\/13/' -e 's/1048576/\/12/' -e 's/2097152/\/11/' -e 's/4194304/\/10/' -e 's/8388608/\/9/' -e 's/16777216/\/8/' > Redes$a.txt
 
         ipset create "$a-net" hash:net 2>/dev/null
         ipset flush "$a-net"
 
         while IFS= read -r rede; do
-		ipset add "$a-net" $rede
-	done < Redes$a.txt
+                ipset add "$a-net" $rede
+        done < Redes$a.txt
 
         rm ipv4$a
         rm Redes$a.txt
 
-	iptables -t filter -I INPUT -m set --match-set "$a-net" src -j DROP
+        iptables -t filter -I INPUT -m set --match-set "$a-net" src -j DROP
 
-	echo "$a bloqueado"
+        echo "$a bloqueado"
+}
+
+delset () {
+
+        for i in ${@:2}
+        do
+
+        a=${i^^}
+        echo "Removendo bloqueio para $a"
+
+        iptables -t filter -D INPUT -m set --match-set "$a-net" src -j DROP
+        ipset destroy "$a-net"
+
+        done
+        echo "Bloqueios removidos: ${@:2}"
+
+}
+
+verifica () {
+
+        for i in ${@^^}
+        do
+                [[ $i == "--DEL" ]] || [[ $i == "TOR" ]] && continue
+                [[ $(echo -n $i | wc -c) -gt 2 ]] && { echo "$i excede o número de caracteres"; maior=1; }
+                [[ $(echo -n $i | wc -c) -le 1 ]] && { echo "$i argumento incompleto"; menor=1; }
+
+done
+[[ $maior -eq 1 ]] && exit 42
+[[ $menor -eq 1 ]] && exit 42
 }
 
 [[ $(which ipset) ]] || { clear; echo -e "\n\nIPSet não encontrado\n\n" ; exit 33; }
-[[ $1 ]] && comeca $@ || echo "uso $0 SiglaPais ex: $0 CN BR AU"
+[[ $1 ]] && verifica $@
+[[ $1 == "--del" ]] || [[ $1 == "--DEL" ]] && delset $@ && exit 0
+[[ $1 ]] && comeca $@ || { clear; echo -e "To create a set or sets: $0 CN BR AU\n\nTo remove a set or sets: $0 --del CN BR AU tor\n\nTOR should always come first when creating set if thats the case, ex: $0 tor cn br...\n" ; exit 33; }
 
-rm delegated-ripencc-extended-latest delegated-afrinic-latest delegated-apnic-extended-latest delegated-arin-extended-latest delegated-lacnic-latest 2>/dev/null
+rm delegated-ripencc-extended-latest delegated-afrinic-latest delegated-apnic-extended-latest delegated-arin-extended-latest delegated-lacnic-extended-latest 2>/dev/null
