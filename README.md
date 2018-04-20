@@ -10,8 +10,8 @@ Desenvolvido por Duilio Beojone Neto
 \# [OK] Criar função para remover sets criados\
 \# - Melhorar o sed na func criaset() para redes menores que 256 hosts															       
 \# - Trabalhar também com ipv6																																			       
-\# [OK] bloquear também a rede TOR							\																											         
-\# - verificar se os arquivos fornecidos pela arin e afrinc ainda apresentam erros (culpa deles)\
+\# [OK] bloquear também a rede TOR																																		         
+\# - verificar se os arquivos fornecidos pela ripe e afrinc ainda apresentam erros (culpa deles)\
 \# - suporte à mac
                                                                                                  
 #	 (EN-US)                                                                                               
@@ -22,8 +22,8 @@ Desenvolvido por Duilio Beojone Neto
 \# [OK] Create a function to remove the sets previously created\
 \# - SED on criaset(), aiming networks smaller than 256 hosts\
 \# - IPv6 support\
-\# [OK] Block Tor network exit nodes\
-\# - check if arin and afrinic files still corrupted (they were reporting a crazy number of hosts on some networks)					\
+\# [OK] Block Tor network exit nodes
+\# - check if ripe and afrinic files still corrupted (they were reporting a crazy number of hosts on some networks)					\
 \# - mac support (since I dont have a mac I think this will take some more time to go...)
 \
 \
