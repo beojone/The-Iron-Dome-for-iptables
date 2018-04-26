@@ -7,30 +7,32 @@ Desenvolvido por Duilio Beojone Neto
 
 \# Melhorias a fazer:		
 
-\# [OK] Criar função para remover sets criados\
-\# - Melhorar o sed na func criaset() para redes menores que 256 hosts															       
 \# - Trabalhar também com ipv6																																			       
-\# [OK] bloquear também a rede TOR																																		         
 \# - verificar se os arquivos fornecidos pela ripe e afrinc ainda apresentam erros (culpa deles)\
-\# - suporte à mac
-                                                                                                 
+\     - Foi feita uma validação para as redes que estão fora do formato CIDR nos arquivos de terceiros
+\# - suporte à mac \
+\# [OK] Criar função para remover sets criados\
+\# [OK] Melhorar o sed na func criaset() para redes menores que 256 hosts															       
+\# [OK] bloquear também a rede TOR																																		         
+
 #	 (EN-US)                                                                                               
 \#  Bash script to add ipsets to iptables based on country code(s) provided by user
 
 \# Things to improve:			\
 \
-\# [OK] Create a function to remove the sets previously created\
-\# - SED on criaset(), aiming networks smaller than 256 hosts\
 \# - IPv6 support\
-\# [OK] Block Tor network exit nodes\
 \# - check if ripe and afrinic files still corrupted (they were reporting a crazy number of hosts on some networks)					\
-\# - mac support (since I dont have a mac I think this will take some more time to go...)
+\     - A validation is in place for networks reported out of CIDR notation on third party files \
+\# - mac support (since I dont have a mac I think this will take some more time to go...) \
+\# [OK] Create a function to remove the sets previously created\
+\# [OK] SED on criaset(), aiming networks smaller than 256 hosts\
+\# [OK] Block Tor network exit nodes\
 \
 \
 \
 \
 Usage: "$0 CountryCode ex: $0 CN BR AU"\
-ex: ./iptablesSETSbyCC.sh CN BR AU\
+ex: ./iptablesSETSbyCC.sh TOR CN BR AU\
 \
 \
 \
