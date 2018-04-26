@@ -9,7 +9,7 @@ Desenvolvido por Duilio Beojone Neto
 
 \# - Trabalhar também com ipv6																																			       
 \# - verificar se os arquivos fornecidos pela ripe e afrinc ainda apresentam erros (culpa deles)\
-\     - Foi feita uma validação para as redes que estão fora do formato CIDR nos arquivos de terceiros
+     - Foi feita uma validação para as redes que estão fora do formato CIDR nos arquivos de terceiros \
 \# - suporte à mac \
 \# [OK] Criar função para remover sets criados\
 \# [OK] Melhorar o sed na func criaset() para redes menores que 256 hosts															       
@@ -22,7 +22,7 @@ Desenvolvido por Duilio Beojone Neto
 \
 \# - IPv6 support\
 \# - check if ripe and afrinic files still corrupted (they were reporting a crazy number of hosts on some networks)					\
-\     - A validation is in place for networks reported out of CIDR notation on third party files \
+     - A validation is in place for networks reported out of CIDR notation on third party files \
 \# - mac support (since I dont have a mac I think this will take some more time to go...) \
 \# [OK] Create a function to remove the sets previously created\
 \# [OK] SED on criaset(), aiming networks smaller than 256 hosts\
