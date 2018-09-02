@@ -1,4 +1,4 @@
-# iptablesSETSbyCC
+# The Iron Dome for iptables - iptablesSETSbyCC
 This is a bash script to implement country blocking via iptables\
 Desenvolvido por Duilio Beojone Neto
 
